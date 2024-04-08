@@ -30,9 +30,6 @@
             <img src="https://inkythuatso.com/uploads/thumbnails/800/2021/12/logo-dai-hoc-thuy-loi-inkythuatso-converted-01-23-08-45-05.jpg" alt="Logo" height="50">
             <h1 class="ms-3">Project Final</h1>
         </div>
-
-        <div class="col-md-2 text-right">
-            <button id="show-form-btn" class="btn btn-primary">Hiện form đánh giá</button> <!-- Nút để hiển thị form -->
         </div>
     </div>
 </header>
@@ -51,10 +48,27 @@
                         <a class="nav-link active active-link" data-bs-toggle="tab" href="#nhandienpro">Nhận diện ảnh</a>
                     </li>
                     <li class="nav-item mb-2">
-                        <a class="nav-link" data-bs-toggle="tab" href="#text-to-voice">Text to Speech</a>
+                        <a class="nav-link" data-bs-toggle="tab" href="#text-to-voice">Chuyển sang giọng đọc</a>
                     </li>
                     <li class="nav-item mb-2">
-                        <a class="nav-link" data-bs-toggle="tab" href="#coming-soon">Đang phát triển</a>
+                        <a class="nav-link" data-bs-toggle="tab" href="#translation">Dịch</a>
+                    </li>    
+                    
+                    <li class="nav-item mb-2">
+                        <a id="toggle-chatbot-link" class="nav-link" href="#ialogflow-chatbot-container">Chat với chatbot của chúng tôi</a>
+                    </li> 
+                    <!-- Thẻ div chứa iframe của chatbot -->
+                    <div id="dialogflow-chatbot-container" style="display: none;">
+                        <iframe id="dialogflow-chatbot"
+                                allow="microphone;"
+                                width="350"
+                                height="430"
+                                src="https://console.dialogflow.com/api-client/demo/embedded/ad608fcc-2e1c-403e-9ee0-6ae037ba6352"
+                                style="border: none; border-radius: 10px; overflow: hidden;">
+                        </iframe>
+                    </div>
+                    <li class="nav-item mb-2">
+                        <a id="show-form-btn" class="nav-link" data-bs-toggle="tab" href="#show-form-btn">Hiện form đánh giá</a>
                     </li>
                 </ul>
             </div>
@@ -63,6 +77,18 @@
         <!-- Main Content -->
         <div class="col-lg-10 main-content">
             <div class="tab-content">
+                <!-- Thẻ div chứa iframe của chatbot -->
+<!-- Thẻ div chứa iframe của chatbot -->
+<div id="dialogflow-chatbot-container" class="chatbot-container" style="display: none;">
+    <iframe id="dialogflow-chatbot"
+            allow="microphone;"
+            width="350"
+            height="430"
+            src="https://console.dialogflow.com/api-client/demo/embedded/ad608fcc-2e1c-403e-9ee0-6ae037ba6352"
+            style="border: none; border-radius: 10px; overflow: hidden;">
+    </iframe>
+</div>
+
                 <div class="tab-pane fade show active" id="nhandienpro">
                     <!-- Place for Nhận diện ảnh content -->
                     <div class="container">
@@ -84,24 +110,24 @@
                             <div class="col-lg-8">
                                 <div class="result-table">
                                     <h3>Kết quả nhận diện</h3>
-                                    <table class="table">
-                                        <thead>
-                                        <tr>
-                                            <th scope="col">Cảm xúc:</th>
-                                            <th scope="col">Nhận diện văn bản</th>
-                                            <th scope="col">Nhận diện màu sắc</th>
-                                            <th scope="col">Đối tượng trong ảnh:</th>
-                                        </tr>
-                                        </thead>
-                                        <tbody>
-                                        <tr>
-                                            <td id="emotionResult1"></td>
-                                            <td id="textResult1"></td>
-                                            <td id="colorResult1"></td>
-                                            <td id="objectResult1"></td>
-                                        </tr>
-                                        </tbody>
-                                    </table>
+                                        <table class="table">
+                                            <thead>
+                                            <tr>
+                                                <th scope="col">Cảm xúc:</th>
+                                                <th scope="col">Nhận diện văn bản</th>
+                                                <th scope="col">Nhận diện màu sắc</th>
+                                                <th scope="col">Đối tượng trong ảnh:</th>
+                                            </tr>
+                                            </thead>
+                                            <tbody>
+                                            <tr>
+                                                <td id="emotionResult1"></td>
+                                                <td id="textResult1"></td>
+                                                <td id="colorResult1"></td>
+                                                <td id="objectResult1"></td>
+                                            </tr>
+                                            </tbody>
+                                        </table>
                                 </div>
                             </div>
                         </div>
@@ -133,19 +159,76 @@
                         </div>
                     </div>
                 </div>
-                <div class="tab-pane fade" id="coming-soon">
-                    <!-- Place for Đang phát triển content -->
-                    <h2>Đang phát triển</h2>
-                    <p>Coming soon...</p>
+                <!-- Tab pane cho phần dịch -->
+                <div class="tab-pane fade" id="translation">
+                    <div class="container">
+                        <!-- Phần chọn ngôn ngữ và ảnh hoặc văn bản -->
+                        <div class="row">
+                            <!-- Left column for file input và chọn ngôn ngữ -->
+                            <div class="col-lg-4">
+                                <h3>Chọn tệp tin</h3>
+                                <input type="file" id="imageInput3" accept="image/*">
+                                <div class="d-flex justify-content-center mt-3 mb-3">
+                                    <button onclick="processImage('imageInput3')" class="btn btn-primary me-2">Nhận diện văn bản</button>
+                                </div>
+                                <h3>Hình ảnh đã chọn:</h3>
+                                <img id="selectedImage3" src="" class="img-fluid" style="width: 70%;">
+                                <!-- Phần chọn ngôn ngữ -->
+                                <div class="mt-3">
+                                    <label for="languageSelect">Chọn ngôn ngữ:</label>
+                                    <select id="languageSelect" class="form-select">
+                                        <option value="en">Tiếng Anh</option>
+                                        <option value="vi">Tiếng Việt</option>
+                                        <option value="fr">Tiếng Pháp</option>
+                                        <option value="es">Tiếng Tây Ban Nha</option>
+                                        <option value="de">Tiếng Đức</option>
+                                        <option value="it">Tiếng Ý</option>
+                                        <option value="ja">Tiếng Nhật</option>
+                                        <option value="ko">Tiếng Hàn</option>
+                                        <option value="zh-CN">Tiếng Trung (Giản thể)</option>
+                                        <option value="zh-TW">Tiếng Trung (Phồn thể)</option>
+                                        <option value="pt">Tiếng Bồ Đào Nha</option>
+                                        <option value="ru">Tiếng Nga</option>
+                                        <option value="ar">Tiếng Ả Rập</option>
+                                        <option value="hi">Tiếng Hindi</option>
+                                        <option value="tr">Tiếng Thổ Nhĩ Kỳ</option>
+                                        <option value="nl">Tiếng Hà Lan</option>
+                                        <option value="pl">Tiếng Ba Lan</option>
+                                        <option value="sv">Tiếng Thụy Điển</option>
+                                        <option value="id">Tiếng Indonesia</option>
+                                        <option value="fi">Tiếng Phần Lan</option>
+                                        <option value="hu">Tiếng Hungary</option>
+                                        
+                                        <!-- Thêm các ngôn ngữ khác nếu cần -->
+                                    </select>
+                                </div>
+                            </div>
+                            <!-- Right column for text result và kết quả dịch -->
+                            <div class="col-lg-8">
+                                <div>
+                                    <h3>Kết quả nhận diện văn bản:</h3>
+                                    <div id="textResult3"></div>
+                                </div>
+                                <!-- Phần kết quả dịch -->
+                                <div>
+                                    <h3>Kết quả dịch:</h3>
+                                    <div id="translationResult"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
+                    <div class="nav-link" id="show-form-btn">
+                        <div id="content-container" class="separator"></div>
+                        <!-- Đây là container chứa iframe Zoho Form -->
+                        <div id="form-container" style="display: none;">
+                            <iframe aria-label='DanhGia' frameborder="0" allow="camera;" style="height:500px;width:99%;border:none;" src='https://forms.zohopublic.com/lehuyenao123/form/DanhGia/formperma/2prbvM-UdhHs659zTaspmaGz8gE2xs7XbrMOe2QXxX8?zf_enablecamera=true'></iframe>
+                        </div>
+                        <div id="dynamic-content-container"></div>
+                    </div>
             </div>
         </div>
     </div>
-    <!-- Đây là container chứa iframe Zoho Form -->
-    <div id="form-container" style="display: none;">
-        <iframe aria-label='DanhGia' frameborder="0" allow="camera;" style="height:500px;width:99%;border:none;" src='https://forms.zohopublic.com/lehuyenao123/form/DanhGia/formperma/2prbvM-UdhHs659zTaspmaGz8gE2xs7XbrMOe2QXxX8?zf_enablecamera=true'></iframe>
-    </div>
-    <div id="dynamic-content-container"></div>
 </div>
 
 <!-- Bootstrap Bundle with Popper -->
@@ -321,49 +404,84 @@
     }
 
     function detectObjects(base64Image, inputId) {
-        const apiKey = 'AIzaSyBh11_P-Aq9JZcfGeZF0m8RKw_mfwC1Zy4';// Thay YOUR_API_KEY bằng API key của bạn
-        const endpoint = 'https://vision.googleapis.com/v1/images:annotate?key=' + apiKey;
+    const apiKey = 'AIzaSyBh11_P-Aq9JZcfGeZF0m8RKw_mfwC1Zy4'; // Thay YOUR_API_KEY bằng API key của bạn
+    const endpoint = 'https://vision.googleapis.com/v1/images:annotate?key=' + apiKey;
 
-        const requestData = {
-            requests: [
-                {
-                    image: {
-                        content: base64Image // Lấy phần nội dung của base64, loại bỏ phần tiêu đề
-                    },
-                    features: [
-                        {
-                            type: 'LABEL_DETECTION',
-                            maxResults: 5
-                        }
-                    ]
-                }
-            ]
-        };
+    const requestData = {
+        requests: [
+            {
+                image: {
+                    content: base64Image
+                },
+                features: [
+                    {
+                        type: 'LABEL_DETECTION',
+                        maxResults: 5
+                    }
+                ]
+            }
+        ]
+    };
 
-        fetch(endpoint, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(requestData)
-        })
-            .then(response => response.json())
-            .then(data => {
-                const objectResult = document.getElementById('objectResult' + inputId.replace('imageInput', ''));
-                if (data.responses && data.responses[0].labelAnnotations && data.responses[0].labelAnnotations.length > 0) {
-                    const objects = data.responses[0].labelAnnotations;
-                    const objectList = objects.map(object => object.description);
-                    objectResult.innerText = objectList.join(', ');
-                } else {
-                    objectResult.innerText = 'Không tìm thấy đối tượng trong ảnh.';
-                }
-            })
-            .catch(error => {
-                console.error('Đã xảy ra lỗi:', error);
-                const objectResult = document.getElementById('objectResult' + inputId.replace('imageInput', ''));
-                objectResult.innerText = 'Có lỗi xảy ra khi xử lý ảnh.';
-            });
-    }
+    fetch(endpoint, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(requestData)
+    })
+    .then(response => response.json())
+    .then(data => {
+        const objectResult = document.getElementById('objectResult' + inputId.replace('imageInput', ''));
+        if (data.responses && data.responses[0].labelAnnotations && data.responses[0].labelAnnotations.length > 0) {
+            const objects = data.responses[0].labelAnnotations;
+            const objectList = objects.map(object => object.description);
+            const englishObjects = objectList.join(', ');
+            translateObjects(englishObjects, objectResult);
+        } else {
+            objectResult.innerText = 'Không tìm thấy đối tượng trong ảnh.';
+        }
+    })
+    .catch(error => {
+        console.error('Đã xảy ra lỗi:', error);
+        const objectResult = document.getElementById('objectResult' + inputId.replace('imageInput', ''));
+        objectResult.innerText = 'Có lỗi xảy ra khi xử lý ảnh.';
+    });
+}
+
+function translateObjects(englishObjects, objectResult) {
+    const apiKey = 'AIzaSyBh11_P-Aq9JZcfGeZF0m8RKw_mfwC1Zy4'; // Thay YOUR_TRANSLATE_API_KEY bằng API key của bạn
+    const endpoint = 'https://translation.googleapis.com/language/translate/v2?key=' + apiKey;
+    const targetLanguage = 'vi';
+
+    const requestData = {
+        q: englishObjects,
+        source: 'en',
+        target: targetLanguage
+    };
+
+    fetch(endpoint, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(requestData)
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.data && data.data.translations && data.data.translations.length > 0) {
+            const translatedObjects = data.data.translations[0].translatedText;
+            objectResult.innerText = translatedObjects;
+        } else {
+            objectResult.innerText = 'Không thể dịch đối tượng.';
+        }
+    })
+    .catch(error => {
+        console.error('Đã xảy ra lỗi khi dịch đối tượng:', error);
+        objectResult.innerText = 'Có lỗi xảy ra khi dịch đối tượng.';
+    });
+}
+
 
     function translateEmotion(englishEmotion) {
         switch (englishEmotion) {
@@ -389,136 +507,192 @@
                 return 'Không xác định được cảm xúc';
         }
     }
-    function speakText() {
-        const text = document.getElementById('textResult2').innerText;
-        const audioPlayer = document.getElementById('audioPlayer');
-        const apiKey = 'AIzaSyBh11_P-Aq9JZcfGeZF0m8RKw_mfwC1Zy4'; // Thay YOUR_API_KEY bằng API key của bạn
-        const endpoint = 'https://texttospeech.googleapis.com/v1/text:synthesize?key=' + apiKey;
+        function speakText() {
+            const text = document.getElementById('textResult2').innerText;
+            const audioPlayer = document.getElementById('audioPlayer');
+            const apiKey = 'AIzaSyBh11_P-Aq9JZcfGeZF0m8RKw_mfwC1Zy4'; // Thay YOUR_API_KEY bằng API key của bạn
+            const endpoint = 'https://texttospeech.googleapis.com/v1/text:synthesize?key=' + apiKey;
 
-        const requestData = {
-            input: {
-                text: text
-            },
-            voice: {
-                languageCode: 'vi-VN',
-                name: 'vi-VN-Standard-A',
-                ssmlGender: 'FEMALE'
-            },
-            audioConfig: {
-                audioEncoding: 'MP3'
-            }
-        };
-
-        fetch(endpoint, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(requestData)
-        })
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error('Text-to-Speech API request failed');
+            const requestData = {
+                input: {
+                    text: text
+                },
+                voice: {
+                    languageCode: 'vi-VN',
+                    name: 'vi-VN-Standard-A',
+                    ssmlGender: 'FEMALE'
+                },
+                audioConfig: {
+                    audioEncoding: 'MP3'
                 }
-                return response.json();
+            };
+
+            fetch(endpoint, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(requestData)
             })
-            .then(data => {
-                const audioContent = data.audioContent;
-                playAudio(audioContent);
-            })
-            .catch(error => {
-                console.error('Đã xảy ra lỗi:', error);
-            });
-    }
-
-    function playAudio(audioContent) {
-        const audioPlayer = document.getElementById('audioPlayer');
-        const blob = base64ToBlob(audioContent, 'audio/mp3');
-        const audioUrl = URL.createObjectURL(blob);
-        audioPlayer.src = audioUrl;
-        audioPlayer.style.display = 'block';
-        audioPlayer.play();
-    }
-
-
-    function base64ToBlob(base64Data, contentType) {
-        contentType = contentType || '';
-        const sliceSize = 1024;
-        const byteCharacters = atob(base64Data);
-        const byteArrays = [];
-        for (let offset = 0; offset < byteCharacters.length; offset += sliceSize) {
-            const slice = byteCharacters.slice(offset, offset + sliceSize);
-            const byteNumbers = new Array(slice.length);
-            for (let i = 0; i < slice.length; i++) {
-                byteNumbers[i] = slice.charCodeAt(i);
-            }
-            const byteArray = new Uint8Array(byteNumbers);
-            byteArrays.push(byteArray);
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Text-to-Speech API request failed');
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    const audioContent = data.audioContent;
+                    playAudio(audioContent);
+                })
+                .catch(error => {
+                    console.error('Đã xảy ra lỗi:', error);
+                });
         }
-        return new Blob(byteArrays, { type: contentType });
-    }
-</script>
-<script type="text/javascript" id="zsiqchat">
-    var $zoho=$zoho || {};
-    $zoho.salesiq = $zoho.salesiq || {
-        widgetcode: "siqe0ed9c373e3200bf7e00fd4fbd99785762097ac9a842860ae118500a3d2094a3",
-        values:{},
-        ready:function(){}
-    };
-    var d=document;
-    s=d.createElement("script");
-    s.type="text/javascript";
-    s.id="zsiqscript";
-    s.defer=true;
-    s.src="https://salesiq.zohopublic.com/widget";
-    t=d.getElementsByTagName("script")[0];
-    t.parentNode.insertBefore(s,t);
-</script>
-<script type="text/javascript" id="zsiqchat">
-    var $zoho=$zoho || {};
-    $zoho.salesiq = $zoho.salesiq || {
-        widgetcode: "siqe0ed9c373e3200bf7e00fd4fbd99785762097ac9a842860ae118500a3d2094a3",
-        values:{},
-        ready:function(){}
-    };
-    var d=document;
-    s=d.createElement("script");
-    s.type="text/javascript";
-    s.id="zsiqscript";
-    s.defer=true;
-    s.src="https://salesiq.zohopublic.com/widget";
-    t=d.getElementsByTagName("script")[0];
-    t.parentNode.insertBefore(s,t);
 
-    // JavaScript để hiển thị/ẩn form khi nhấp vào nút "Hiện form đánh giá"
-    document.getElementById("show-form-btn").addEventListener("click", function() {
-        var formContainer = document.getElementById("form-container");
-        if (formContainer.style.display === "block") {
-            formContainer.style.display = "none";
+        function playAudio(audioContent) {
+            const audioPlayer = document.getElementById('audioPlayer');
+            const blob = base64ToBlob(audioContent, 'audio/mp3');
+            const audioUrl = URL.createObjectURL(blob);
+            audioPlayer.src = audioUrl;
+            audioPlayer.style.display = 'block';
+            audioPlayer.play();
+        }
+
+
+        function base64ToBlob(base64Data, contentType) {
+            contentType = contentType || '';
+            const sliceSize = 1024;
+            const byteCharacters = atob(base64Data);
+            const byteArrays = [];
+            for (let offset = 0; offset < byteCharacters.length; offset += sliceSize) {
+                const slice = byteCharacters.slice(offset, offset + sliceSize);
+                const byteNumbers = new Array(slice.length);
+                for (let i = 0; i < slice.length; i++) {
+                    byteNumbers[i] = slice.charCodeAt(i);
+                }
+                const byteArray = new Uint8Array(byteNumbers);
+                byteArrays.push(byteArray);
+            }
+            return new Blob(byteArrays, { type: contentType });
+        }
+        function translateText(text, targetLanguage) {
+            const apiKey = 'AIzaSyBh11_P-Aq9JZcfGeZF0m8RKw_mfwC1Zy4'; // Thay YOUR_API_KEY bằng API key của bạn
+            const detectLanguageEndpoint = 'https://translation.googleapis.com/language/translate/v2/detect?key=' + apiKey;
+
+            // Gửi yêu cầu nhận diện ngôn ngữ của văn bản
+            fetch(detectLanguageEndpoint, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ q: text })
+            })
+                .then(response => response.json())
+                .then(data => {
+                    if (data && data.data && data.data.detections && data.data.detections.length > 0) {
+                        const detectedLanguage = data.data.detections[0][0].language;
+                        // Kiểm tra nếu ngôn ngữ được chọn để dịch giống với ngôn ngữ nguồn
+                        if (detectedLanguage === targetLanguage) {
+                            // Hiển thị lại văn bản nguồn
+                            const translationResult = document.getElementById('translationResult');
+                            translationResult.innerText = text;
+                        } else {
+                            // Sử dụng ngôn ngữ được nhận diện làm ngôn ngữ nguồn
+                            const translateEndpoint = 'https://translation.googleapis.com/language/translate/v2?key=' + apiKey;
+                            const requestData = {
+                                q: text,
+                                source: detectedLanguage,
+                                target: targetLanguage
+                            };
+
+                            // Gửi yêu cầu dịch văn bản
+                            fetch(translateEndpoint, {
+                                method: 'POST',
+                                headers: {
+                                    'Content-Type': 'application/json'
+                                },
+                                body: JSON.stringify(requestData)
+                            })
+                                .then(response => response.json())
+                                .then(translationData => {
+                                    const translationResult = document.getElementById('translationResult');
+                                    if (translationData && translationData.data && translationData.data.translations && translationData.data.translations.length > 0) {
+                                        const translatedText = translationData.data.translations[0].translatedText;
+                                        translationResult.innerText = translatedText;
+                                    } else {
+                                        translationResult.innerText = 'Không thể dịch văn bản.';
+                                    }
+                                })
+                                .catch(error => {
+                                    console.error('Đã xảy ra lỗi khi dịch văn bản:', error);
+                                });
+                        }
+                    } else {
+                        console.error('Không thể xác định ngôn ngữ của văn bản.');
+                    }
+                })
+                .catch(error => {
+                    console.error('Đã xảy ra lỗi khi xác định ngôn ngữ của văn bản:', error);
+                });
+        }
+
+        // Sự kiện thay đổi ngôn ngữ được chọn
+        document.getElementById('languageSelect').addEventListener('change', function(event) {
+            const selectedLanguage = event.target.value; // Lấy ngôn ngữ được chọn từ dropdown
+            const text = document.getElementById('textResult3').innerText; // Lấy văn bản từ ảnh
+            translateText(text, selectedLanguage); // Dịch văn bản từ ảnh theo ngôn ngữ được chọn
+        });
+
+        
+</script>
+
+<script type="text/javascript" id="zsiqchat">var $zoho=$zoho
+ || {};$zoho.salesiq = $zoho.salesiq 
+ || {widgetcode: "siq9e335d1d8a2c5f532b83851494e14bc673a8a95b8256588b01e26b960aea922b", 
+ values:{},ready:function(){}};var d=document;
+ s=d.createElement("script");s.type="text/javascript";
+ s.id="zsiqscript";s.defer=true;s.src="https://salesiq.zohopublic.com/widget";
+ t=d.getElementsByTagName("script")[0];t.parentNode.insertBefore(s,t);
+ </script>
+
+<script>
+           document.getElementById("show-form-btn").addEventListener("click", function() {
+            var formContainer = document.getElementById("form-container");
+            if (formContainer.style.display === "block") {
+                formContainer.style.display = "none";
+            } else {
+                formContainer.style.display = "block";
+            }
+        });
+
+        // Function để hiển thị nội dung tương ứng khi nhấn vào nút
+        function showContent(pageUrl) {
+            fetch(pageUrl)
+                .then(response => response.text())
+                .then(html => {
+                    document.getElementById("dynamic-content-container").innerHTML = html;
+                })
+                .catch(error => console.error('Error fetching content:', error));
+        }
+</script>
+
+<script>
+    // Lắng nghe sự kiện click vào liên kết "Chat với chatbot của chúng tôi"
+    document.getElementById('toggle-chatbot-link').addEventListener('click', function(event) {
+        event.preventDefault(); // Ngăn chặn hành động mặc định của liên kết
+
+        // Lấy thẻ div chứa iframe của chatbot
+        var chatbotContainer = document.getElementById('dialogflow-chatbot-container');
+
+        // Kiểm tra trạng thái hiện tại của chatbot (ẩn hoặc hiện)
+        if (chatbotContainer.style.display === 'none') {
+            // Nếu chatbot đang ẩn, hiển thị nó
+            chatbotContainer.style.display = 'block';
         } else {
-            formContainer.style.display = "block";
+            // Nếu chatbot đang hiển thị, ẩn nó
+            chatbotContainer.style.display = 'none';
         }
     });
-
-    // Function để hiển thị nội dung tương ứng khi nhấn vào nút
-    function showContent(pageUrl) {
-        fetch(pageUrl)
-            .then(response => response.text())
-            .then(html => {
-                document.getElementById("dynamic-content-container").innerHTML = html;
-            })
-            .catch(error => console.error('Error fetching content:', error));
-    }
-</script>
-<!-- Google tag (gtag.js) -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-YD1SC5HBYT"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-
-  gtag('config', 'G-YD1SC5HBYT');
-</script>
 </script>
 </body>
 </html>
